@@ -69,6 +69,22 @@ public:
 
 } // namespace io
 
+#include <type_traits>
+
+namespace io {
+
+template <class>
+struct is_stream : std::false_type {};
+
+template <> struct is_stream<file_stream> : std::true_type {};
+template <> struct is_stream<null_stream> : std::true_type {};
+template <> struct is_stream<string_stream> : std::true_type {};
+
+template <class T>
+constexpr bool is_stream_v = is_stream<T>::value;
+
+} // namespace io
+
 namespace io {
 
 enum int_format {
@@ -96,38 +112,6 @@ void print_int(OStream& os, SInt x, int_format fmt, bool with_prefix=false) {
 template <class OStream, class SInt>
 void print_int(OStream& os, SInt x) {
     print_int(os, x, int_format::decimal, false);
-}
-
-template <class SInt>
-void print_int(SInt x) {
-    print_int(stdout_stream, x);
-}
-
-template <class SInt>
-void print_int(SInt x, int_format fmt, bool with_prefix=false) {
-    print_int(stdout_stream, x, fmt, with_prefix);
-}
-
-template <class OStream, class SInt>
-void println_int(OStream& os, SInt x) {
-    print_int(os, x);
-    os.putc('\n');
-}
-
-template <class OStream, class SInt>
-void println_int(OStream& os, SInt x, int_format fmt, bool with_prefix=false) {
-    print_int(os, x, fmt, with_prefix);
-    os.putc('\n');
-}
-
-template <class SInt>
-void println_int(SInt x) {
-    println_int(stdout_stream, x);
-}
-
-template <class SInt>
-void println_int(SInt x, int_format fmt, bool with_prefix=false) {
-    println_int(stdout_stream, x, fmt, with_prefix);
 }
 
 } // namespace io
@@ -181,39 +165,48 @@ void print_uint(OStream& os, UInt x) {
     print_uint(os, x, int_format::decimal, false);
 }
 
-template <class UInt>
-void print_uint(UInt x) {
-    print_uint(stdout_stream, x);
-}
-
-template <class UInt>
-void print_uint(UInt x, int_format fmt, bool with_prefix=false) {
-    print_uint(stdout_stream, x, fmt, with_prefix);
-}
-
-template <class OStream, class UInt>
-void println_uint(OStream& os, UInt x) {
-    print_uint(os, x);
-    os.putc('\n');
-}
-
-template <class OStream, class UInt>
-void println_uint(OStream& os, UInt x, int_format fmt, bool with_prefix=false) {
-    print_uint(os, x, fmt, with_prefix);
-    os.putc('\n');
-}
-
-template <class UInt>
-void println_uint(UInt x) {
-    println_uint(stdout_stream, x);
-}
-
-template <class UInt>
-void println_uint(UInt x, int_format fmt, bool with_prefix=false) {
-    println_uint(stdout_stream, x, fmt, with_prefix);
-}
-
 } // namespace io
+
+#include <type_traits>
+
+namespace io {
+    template <class OStream, class T, class... Options>
+    std::enable_if_t<is_stream_v<OStream>> print(OStream& os, const T& x, Options&&... options) {
+        if constexpr (std::is_integral_v<T>) {
+            if constexpr (std::is_unsigned_v<T>) {
+                print_uint(os, x, std::move(options)...);
+            }
+            else {
+                print_int(os, x, std::move(options)...);
+            }
+        }
+    }
+
+    template <class OStream, class T, class... Options>
+    std::enable_if_t<!is_stream_v<T>> print(const T& x, Options&&... options) {
+        if constexpr (std::is_integral_v<T>) {
+            if constexpr (std::is_unsigned_v<T>) {
+                print_uint(stdout_stream, x, std::move(options)...);
+            }
+            else {
+                print_int(stdout_stream, x, std::move(options)...);
+            }
+        }
+    }
+
+    template <class OStream, class... Args>
+    std::enable_if_t<is_stream_v<OStream>> println(OStream& os, Args&&... args) {
+        print(os, std::move(args)...);
+        os.putc('\n');
+    }
+
+    template <class Head, class... Args>
+    std::enable_if_t<!is_stream_v<Head>> println(Head&& head, Args&&... args) {
+        print(stdout_stream, std::move(head), std::move(args)...);
+        stdout_stream.putc('\n');
+    }
+}
+
 
 
 

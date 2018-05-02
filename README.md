@@ -24,6 +24,7 @@ We will introduce break change.
 - String stream
 - Make single header script (`python3 make_single_header.py`)
     - Single header file is committed
+- Common interface
 
 
 ## Plan
@@ -33,7 +34,6 @@ We will introduce break change.
     - floating point
 - Colored output
 - String format
-- Common interface and adapter
 
 
 ## Example
@@ -45,22 +45,22 @@ int main()
 {
     using fmt = io::int_format;
 
-    io::println_uint(123u);
-    io::println_uint(123u, fmt::binary);
-    io::println_uint(123u, fmt::hex);
-    io::println_uint(123u, fmt::binary, io::with_prefix);
-    io::println_uint(123u, fmt::hex, io::with_prefix);
+    io::println(123u);
+    io::println(123u, fmt::binary);
+    io::println(123u, fmt::hex);
+    io::println(123u, fmt::binary, io::with_prefix);
+    io::println(123u, fmt::hex, io::with_prefix);
 
-    io::println_int(-123);
-    io::println_int(123);
+    io::println(-123);
+    io::println(123);
 
     // like /dev/null
     io::null_stream null_out;
-    io::println_int(null_out, 123); // no output
+    io::println(null_out, 123); // no output
 
     // string stream
     io::string_stream ss;
-    io::print_int(ss, 123);
+    io::print(ss, 123);
     assert(ss.str() == "123");
 }
 ```

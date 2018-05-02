@@ -2,7 +2,7 @@ import glob
 import os
 
 include_dir = "include/cpp_io"
-dir_queue = ["stream", "format", "printer", ""]
+dir_queue = ["stream", "traits", "format", "printer", "unified", ""]
 
 single_header = "#pragma once\n"
 for dir_s in dir_queue:
