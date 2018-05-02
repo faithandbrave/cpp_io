@@ -4,7 +4,9 @@ import os
 include_dir = "include/cpp_io"
 dir_queue = ["stream", "traits", "format", "printer", "unified", ""]
 
-single_header = "#pragma once\n"
+single_header = "// The file is auto generated. DO NOT edit the file directly.\n"
+single_header += "#pragma once\n"
+
 for dir_s in dir_queue:
     for p in glob.glob("{}/{}/*.hpp".format(include_dir, dir_s)):
         with open(p) as f:

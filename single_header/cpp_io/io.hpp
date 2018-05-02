@@ -1,3 +1,4 @@
+// The file is auto generated. DO NOT edit the file directly.
 #pragma once
 
 #include <cstdio>
