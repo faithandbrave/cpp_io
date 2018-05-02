@@ -20,8 +20,11 @@ We will introduce break change.
 - Type specified outputs:
     - unsigned integers
     - signed integer
-- Null stream (like `/dev/null`)
-- String stream
+- Stream devices:
+    - File stream (stdout, stderr)
+    - Scoped file stream (regular file)
+    - Null stream (like `/dev/null`)
+    - String stream (a.k.a. Memory stream)
 - Make single header script (`python3 make_single_header.py`)
     - Single header file is committed
 - Common interface
@@ -39,12 +42,13 @@ We will introduce break change.
 ## Example
 ```cpp
 #include <cassert>
-#include <cpp_io/io.hpp>
+#include "cpp_io/io.hpp"
 
 int main()
 {
     using fmt = io::int_format;
 
+    // output to stdout
     io::println(123u);
     io::println(123u, fmt::binary);
     io::println(123u, fmt::hex);
@@ -62,6 +66,13 @@ int main()
     io::string_stream ss;
     io::print(ss, 123);
     assert(ss.str() == "123");
+
+    // file stream
+    {
+        io::scoped_file_stream file;
+        file.open("a.txt", "w");
+        io::println(file, 123u);
+    }
 }
 ```
 

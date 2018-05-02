@@ -41,4 +41,39 @@ public:
 inline file_stream stdout_stream {stdout};
 inline file_stream stderr_stream {stderr};
 
+
+class scoped_file_stream {
+    file_stream stream_;
+public:
+    scoped_file_stream() {}
+    explicit scoped_file_stream(FILE* handle)
+        : stream_(handle) {}
+
+    ~scoped_file_stream() {
+        close();
+    }
+
+    void open(FILE* handle) noexcept {
+        stream_.open(handle);
+    }
+
+    bool open(const char* filename, const char* mode) noexcept {
+        return stream_.open(filename, mode);
+    }
+
+    void close() noexcept {
+        stream_.close();
+    }
+
+    FILE* native_handle() noexcept { return stream_.native_handle(); }
+
+    void putc(char c) {
+        stream_.putc(c);
+    }
+
+    void puts(const char* s) {
+        stream_.puts(s);
+    }
+};
+
 } // namespace io
