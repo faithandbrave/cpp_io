@@ -6,7 +6,7 @@ The library is alternative C++ standard I/O stream library.
 We will introduce break change.
 
 
-## Deign
+## Design
 - No Locale (locale is heavy and useless)
 - With new line API (`println`)
 - Can get native handle (for OS native API)
