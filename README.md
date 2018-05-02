@@ -24,6 +24,7 @@ We will introduce break change.
 namespace io {
   // unscoped
   class file_descriptor {
+  public:
     void open(FILE* desc) noexcept;
     bool open(const char* filename, const char* mode) noexcept;
 
