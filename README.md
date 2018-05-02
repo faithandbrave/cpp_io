@@ -24,6 +24,12 @@ We will introduce break change.
 
 
 ## Plan
+- More type specified outputs:
+    - signed integer
+    - character
+    - string
+    - floating point
+- Colored output
 - String format
 - Common interface and adapter
 
