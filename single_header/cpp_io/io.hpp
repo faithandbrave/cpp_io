@@ -184,15 +184,8 @@ namespace io {
     }
 
     template <class OStream, class T, class... Options>
-    std::enable_if_t<!is_stream_v<T>> print(const T& x, Options&&... options) {
-        if constexpr (std::is_integral_v<T>) {
-            if constexpr (std::is_unsigned_v<T>) {
-                print_uint(stdout_stream, x, std::move(options)...);
-            }
-            else {
-                print_int(stdout_stream, x, std::move(options)...);
-            }
-        }
+    std::enable_if_t<!is_stream_v<T>> print(T&& x, Options&&... options) {
+        print(stdout_stream, std::move(x), std::move(options)...);
     }
 
     template <class OStream, class... Args>
