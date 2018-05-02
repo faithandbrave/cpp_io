@@ -22,10 +22,11 @@ We will introduce break change.
     - signed integer
 - Null stream (like `/dev/null`)
 - String stream
+- Make single header script (`python3 make_single_header.py`)
+    - Single header file is committed
 
 
 ## Plan
-- Make single header script
 - More type specified outputs:
     - character
     - string

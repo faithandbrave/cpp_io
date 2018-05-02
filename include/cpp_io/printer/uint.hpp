@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 #include <limits>
-#include "format.hpp"
+#include "../format/int_format.hpp"
 
 namespace io {
 
